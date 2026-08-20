@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Role is kept as a plain string (not a DB enum) so the exact display
+// labels used throughout the app ("Senior Staff", "Junior Staff",
+// "National Service Personnel") are stored as-is. Validated in the API routes.
+
+model Employee {
+  id         String       @id @default(uuid())
+  employeeId String?      @unique @map("employee_id") // null for National Service Personnel
+  name       String
+  department String
+  role       String
+  createdAt  DateTime     @default(now()) @map("created_at")
+  attendance Attendance[]
+
+  @@map("employees")
+}
+
+model Attendance {
+  id          String   @id @default(uuid())
+  employeeRef String   @map("employee_ref")
+  employee    Employee @relation(fields: [employeeRef], references: [id], onDelete: Cascade)
+  date        DateTime @db.Date
+  clockIn     DateTime? @map("clock_in")
+  clockOut    DateTime? @map("clock_out")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@unique([employeeRef, date]) // one attendance row per employee per day
+  @@map("attendance")
+}
+
+model AppSettings {
+  id       Int    @id @default(1)
+  password String
+
+  @@map("app_settings")
+}
