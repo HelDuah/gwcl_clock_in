@@ -4,16 +4,16 @@ import { useState } from "react";
 import { Employee, Role } from "@/lib/types";
 
 const DEPARTMENTS = [
-  "Operations",
+  "Drilling",
   "Distribution",
-  "Customer Service",
+  "Public Relations",
   "Finance & Accounts",
   "Human Resources",
-  "Engineering",
-  "Security",
+  "ICT",
+  "Audit",
   "Administration",
   "Commercial",
-  "Other",
+  "GIS",
 ];
 
 export interface EmployeeFormValues {
